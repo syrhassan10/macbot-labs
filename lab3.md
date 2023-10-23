@@ -11,12 +11,79 @@
 -   Learn how to set up and use a depth camera with ROS.
     
 -   Generate a point cloud from depth images.
-    
--   Create a transformation between the camera frame and the robot's base link frame.
-    
+        
 -   Visualize camera data in RViz.
 
 
+## Intro to Depth Cameras - OAK-D-LITE
+
+In stereo vision, depth perception is achieved by capturing different views of an object in view from two or more cameras placed at separate locations, much like the human two eyes. The slight differences, or disparities, between these individual pixels are used to calculate the depth or distance of objects in view.
+
+Depth Cameras uses two seperate cameras side by side, like human eyes. Each camera takes a picture. The system looks at a point on the object in both pictures and measures how far apart that point appears in the two images. Knowing this difference and how far apart the cameras are, the system can calculate how far away the object is.
+
+
+Baseline (B): The distance between the two cameras.
+
+Disparity (d): The difference in the position of the object in the two pictures.
+
+Focal Length (f): The distance inside each camera from the lens to the sensor, where the image is formed.
+Simple Geometry:
+
+Triangle Similarity: You can imagine two similar right triangles. One is formed by the focal length (f) and the object's position in one picture, and the other is formed by the baseline (B) and the actual distance to the object (Z).
+
+Ratio: The ratio of these triangles' sides gives you the equation:
+
+    f / d = Z / B
+
+​
+ 
+Calculate Z (Distance to Object): With this equation, you can find the distance to the object (Z) by rearranging it:
+
+    Z = (f * B) / d
+
+
+
+
+
+
+![Images/depth_c](Images/Stereo3DVision_1.png)
+
+### From luxonis documenntation website:
+Stereo depth perception
+This OAK camera has a baseline of 7.5cm - the distance between the left and the right stereo camera. Minimal and maximal depth perception (MinZ and Max) depends on camera FOV, resolution, and baseline- more information here.
+
+Ideal range: 70cm - 8m
+
+MinZ: ~20cm (400P, extended), ~35cm (400P OR 800P, extended), ~70cm (800P)
+
+MaxZ: ~15 meters with a variance of 10% (depth accuracy evaluation)
+
+
+## Depth Camera Application with Autonomous Vehicles
+
+Navigation: Depth cameras help robots to navigate by creating a 3D map of their environment.
+Object Manipulation: Depth data can aid in the precise grasping and manipulation of objects.
+
+Surgical Assistance: In medical robotics, depth cameras can provide real-time 3D imaging to assist in complex surgeries.
+Gait Analysis: Used in biomechanics to study human movement and posture.
+
+Advanced Driver-Assistance Systems (ADAS): Depth cameras can be used to detect objects, pedestrians, and even road signs.
+Autonomous Vehicles: Crucial for real-time navigation and obstacle detection.
+
+
+
+### Depth Maps and Collision Warning systems
+
+A depth map is an image or image channel that contains information relating to the distance of the surfaces of scene objects from a viewpoint. Estimating depth is an important component of understanding geometric relations within a scene.
+
+The first step to calculating the collision warning was to select a region of interest (ROI) from the disparity output. The yellow region which signifies least distance from the vehicle was taken as the ROI
+
+You can also use YOLO object detection model to detect objects, pedestrians, and even road signs.
+
+This can be crucial for real-time navigation and obstacle detection.
+
+
+![Images/col](Images/col_warn.png)
 
 ## Quick review of ROS 
 
@@ -33,7 +100,7 @@ Topics are named buses over which nodes exchange messages. A node sends out a me
 -   **Publishers** are nodes that send out messages to a topic.
 -   **Subscribers** are nodes that receive messages from a topic.
 
-![ROS Overview](ROS-Node-and-Topics-scheme.png)
+![Images/ROS Overview](Images/ROS-Node-and-Topics-scheme.png)
 
 ## Depth AI Python Jetson Nano Setup 
 ##### This phase serves as a preliminary step, focusing on the configuration of your Jetson system to interface with the OAK-D cameras effectively. It also involves the installation of the DepthAI Python Library,  which is not related to ROS but is to verify the successful launch and functioning of the OAK-D camera system post-setup.
@@ -110,8 +177,8 @@ echo "export OPENBLAS_CORETYPE=ARMV8" >> ~/.bashrc
 ```
 Navigate to the folder with `depthai` examples folder, run `python3 install_requirements.py` and then run `python3 rgb_preview.py` to test out if your camera works.
 
-![ROS Overview](depthai_pythonlib_1.png)
-![ROS Overview](depthai_pythonlib_2.png)
+![Images/ROS Overview](Images/depthai_pythonlib_1.png)
+![Images/ROS Overview](Images/depthai_pythonlib_2.png)
 
 
 
@@ -169,7 +236,7 @@ once you are inside the docker container run the following
 ```bash
 roslaunch depthai_examples  stereo_node.launch
 ```
-![ROS Overview](ros_example.png)
+![Images/ROS Overview](Images/ros_example.png)
 
 
 you can look inside the other depthai_* ROS Packages and attempt to run them. Please note some of them won't work. i.e. rtabmap launch files won't work as the package is not installed as part of the container. You can apt-get install it and other repos however, once containers are closed all the work inside of them are lost (unless you save current container into a new image).
@@ -199,7 +266,7 @@ Now exit the container by entering `exit` into the terminal
 
 in a new tab run `roscore`. This will start up a ROS Master 
 
-![ROS Overview](roscore_host.png)
+![Images/ROS Overview](Images/roscore_host.png)
 
 
 Now  re run these commands
@@ -216,7 +283,7 @@ once you are inside the docker container run the following
 roslaunch depthai_examples  stereo_node.launch
 ```
 
-![ROS Overview](docker_ros_stereo_node_start.png)
+![Images/ROS Overview](Images/docker_ros_stereo_node_start.png)
 
 
 Create a new tab (original host terminal should be opened)
@@ -228,7 +295,7 @@ rosnode list
 rostopic list
 ```
 
-![ROS Overview](rosnodelist_host.png)
+![Images/ROS Overview](Images/rosnodelist_host.png)
 
 The ros master on your host machine (Jetson nano) should be able to see and read the depthai-ros-neotic nodes from the docker container. Paste a screenshot in your report
 
@@ -236,3 +303,27 @@ The ros master on your host machine (Jetson nano) should be able to see and read
 ```
 sudo docker images
 ```
+
+
+## Lab Questions:
+
+Derive the formula Z = (f * B) / d. Explain each variable in the equation.
+
+What are the limitations of the OAK-D-LITE camera in terms of minimum and maximum depth perception (MinZ and MaxZ)?
+
+Explain how Docker aids in running software independently of the host system. How does it solve the compatibility issue with ROS versions?
+
+
+What does roslaunch do in the ROS ecosystem? Describe its primary function and provide an example command.
+
+
+What is a ROS launch file and why is it important?
+
+Provide an example of a launch file from the OAK-D-LITE package used in this lab. Break down its components and explain each part.
+
+
+
+
+## Lab Requiremnts:
+
+Include a screenshot of the depth camera nodes in RVIZ in your report.
