@@ -86,12 +86,15 @@ rostopic echo /yolov4_publisher/color/yolov4_Spatial_detections
 
 Now position yourself in front of the camer and you should see something like this:
 
-![rosluanch](Images/spatialdetection_rosmsg.png)
+depthai_rosmsgs.png
+![rosluanch](Images/depthai_rosmsgs.png)
+
 
 Important: The ID field conveys what the model detected at that frame. ID 0 means a person. there are 80 classes as mentioned above.
 
 
 This is a SpatialDetection ROS message
+![rosluanch](Images/spatialdetection_rosmsg.png)
 
 - results: An array of ObjectHypothesis messages from vision_msgs, providing the class probabilities for detected objects, indicating how likely it is that a detected object belongs to a certain class.
 
