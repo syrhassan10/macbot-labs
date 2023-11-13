@@ -122,7 +122,7 @@ import rospy
 from vision_msgs.msg import ObjectHypothesis
 from geometry_msgs.msg import Point
 from std_msgs.msg import Bool, String
-from some_msgs_package.msg import SpatialDetection  # Assuming SpatialDetection is a custom message in some_msgs_package
+from depthai_ros_msgs.msg import SpatialDetection
 
 def callback(data):
     # Loop through each ObjectHypothesis in the results array
