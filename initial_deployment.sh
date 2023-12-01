@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Update and Upgrade Ubuntu Packages
+# Update and Upgrade Ubuntu Packagess
 echo "Updating and upgrading Ubuntu packages..."
 sudo apt update && sudo apt -y upgrade
 
